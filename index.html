@@ -101,21 +101,15 @@
   <button onclick="window.location.href='https://forms.gle/9qpR7raTxbhVE3rA9'">Go Vote</button>
 
   <script>
-    // Replace YOUR_SHEET_ID with the published Google Sheet ID
-    const sheetCSV = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/pub?output=csv";
+    const apiUrl = "https://script.google.com/macros/s/AKfycbz1ksP7Qa3DzeSXBOEwDCtlyO9KeMcIi_xmgQKE6xW9cNu3mRLqU8DhLb1xfp2UrC75/exec";
 
     async function fetchVotes() {
       try {
-        const response = await fetch(sheetCSV);
-        const text = await response.text();
-        const rows = text.split('\n').slice(1); // skip header
-        let totalVotes = 0;
-        rows.forEach(row => {
-          const value = parseInt(row.split(',')[0]);
-          if(!isNaN(value)) totalVotes += value;
-        });
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        const totalVotes = data.totalVotes || 0;
         displayVotes(totalVotes);
-      } catch(err) {
+      } catch (err) {
         console.error(err);
         document.getElementById('votes').innerText = "Error loading votes";
       }
@@ -125,27 +119,27 @@
       const votesContainer = document.getElementById('votes');
       votesContainer.innerHTML = '';
 
-      // Display a max of 100 hearts to avoid slowing the browser
       const heartsToShow = Math.min(total, 100);
-      for(let i=0; i<heartsToShow; i++){
+      for (let i = 0; i < heartsToShow; i++) {
         const heart = document.createElement('span');
         heart.className = 'heart';
-        heart.style.color = `hsl(${Math.random()*360}, 80%, 60%)`;
+        heart.style.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
         heart.textContent = '❤️';
         votesContainer.appendChild(heart);
       }
 
-      // Show numeric total in white
-      const totalText = document.createElement('div');
-      totalText.style.fontSize = '1.5em';
-      totalText.style.marginTop = '10px';
-      totalText.style.color = '#fff'; // white color
-      totalText.textContent = `Total Votes: ${total}`;
-      votesContainer.appendChild(totalText);
+      if (total > 100) {
+        const totalText = document.createElement('div');
+        totalText.style.fontSize = '1.5em';
+        totalText.style.marginTop = '10px';
+        totalText.style.color = '#fff';
+        totalText.textContent = `Total Votes: ${total}`;
+        votesContainer.appendChild(totalText);
+      }
     }
 
     fetchVotes();
-    setInterval(fetchVotes, 15000); // refresh every 15 seconds
+    setInterval(fetchVotes, 15000);
   </script>
 
 </body>
