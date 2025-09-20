@@ -101,6 +101,7 @@
   <button onclick="window.location.href='https://forms.gle/9qpR7raTxbhVE3rA9'">Go Vote</button>
 
   <script>
+    // Replace YOUR_SHEET_ID with the published Google Sheet ID
     const sheetCSV = "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/pub?output=csv";
 
     async function fetchVotes() {
@@ -134,18 +135,17 @@
         votesContainer.appendChild(heart);
       }
 
-      // Show numeric total below hearts if large
-      if(total > 100){
-        const totalText = document.createElement('div');
-        totalText.style.fontSize = '1.5em';
-        totalText.style.marginTop = '10px';
-        totalText.textContent = `Total Votes: ${total}`;
-        votesContainer.appendChild(totalText);
-      }
+      // Show numeric total in white
+      const totalText = document.createElement('div');
+      totalText.style.fontSize = '1.5em';
+      totalText.style.marginTop = '10px';
+      totalText.style.color = '#fff'; // white color
+      totalText.textContent = `Total Votes: ${total}`;
+      votesContainer.appendChild(totalText);
     }
 
     fetchVotes();
-    setInterval(fetchVotes, 15000); // refresh every 15s
+    setInterval(fetchVotes, 15000); // refresh every 15 seconds
   </script>
 
 </body>
